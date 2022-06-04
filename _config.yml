@@ -27,7 +27,6 @@ markdown: kramdown
 remote_theme: pages-themes/minimal@v0.2.0
 #theme: tactile
 plugins:
- - jekyll-feed
  - jekyll-remote-theme
 
 # Exclude from processing.
