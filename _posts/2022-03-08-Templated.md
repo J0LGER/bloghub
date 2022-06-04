@@ -9,7 +9,7 @@ In this application, we will take advantage of a Server-Side template injection 
 
 ### Step 1
 Surfing the application we get 
-![Image-1 Broken](/bloghub/docs/assets/templated-1.png)
+![image](https://user-images.githubusercontent.com/54769522/172023200-340c7a1b-191e-4e23-a8aa-187391b1a440.png)
 
 Obviously, _Proudly powered by Flask/Jinja2_ is an indication for SSTI vulnerability against the Jinja2 Engine. 
 
@@ -17,23 +17,24 @@ Fuzzing more through the application I thought of fuzzing for hidden API endpoin
 
 ### Finding the injection point 
 Sending a request to */test* non-existing endpoint we get 
-![Image-2 Broken](/bloghub/docs/assets/templated-2.png) 
+![image](https://user-images.githubusercontent.com/54769522/172023219-9a050ce5-7f16-44a5-981f-f123c6e9682a.png)
 
 Page Source:
-![Image-3 Broken](/bloghub/docs/assets/templated-3.png) 
+![image](https://user-images.githubusercontent.com/54769522/172023229-d54bd9f4-f727-4ac2-9b49-b51a258466a5.png) 
 The endpoint name is being reflected in an HTML _<str>_ tag, which is interesting. 
 
 Let’s try something simple ... 
-![Image-4 Broken](/bloghub/docs/assets/templated-4.png) 
+![image](https://user-images.githubusercontent.com/54769522/172023248-1b915200-5084-4fd5-afed-d77bf72f68a4.png) 
 
 Boom! template rendering applied.
 
 Let's jump in to try out RCE payloads. 
 
 ```Python3
-`GET /{{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}`
+GET /{{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}
 ```
-![Image-5 Broken](/bloghub/docs/assets/templated-5.png)
-
+We get the flag.txt 
+```
+HTB{t3mpl4t3s_4r3_m0r3_p0w3rfu1_th4n_u_th1nk!}
+``` 
 _*TIP*_: We can use the Internal Field Separator bash variable _${IFS}_ in order to inject bash spaces since endpoint path should not contain whitespaces. 
-
