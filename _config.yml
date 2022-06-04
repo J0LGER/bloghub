@@ -24,7 +24,7 @@ github_username:  J0LGER
 
 # Build settings
 markdown: kramdown
-remote_theme: pages-themes/minimal@v0.2.0
+remote_theme: pages-themes/tactile@v0.2.0
 #theme: tactile
 plugins:
  - jekyll-remote-theme
