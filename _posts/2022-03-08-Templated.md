@@ -1,6 +1,7 @@
 ---
 layout: post
 title:  "Templated"
+permalink: /templated/
 date:   2022-03-09 6:17:40 -0500
 categories: jekyll update
 ---
