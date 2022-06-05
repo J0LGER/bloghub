@@ -2,7 +2,6 @@
 layout: default
 ---
 
-# J0LGER - Bloghub 
 
 # Web 🕸️
 
