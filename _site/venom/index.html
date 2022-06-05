@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <link rel="stylesheet" type="text/css" href="/assets/css/print.css" media="print">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Venom Documentation and Usage | J0LGER - Bloghub</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="Venom Documentation and Usage" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Introduction Nowadays enterprise systems and networks contain critical information. Threat actors are coming up with new sophisticated attacks and techniques that are very hard to detect and prevent. Organization are conducting Red Team engagements to simulate such attacks, in order to implement countermeasures." />
+<meta property="og:description" content="Introduction Nowadays enterprise systems and networks contain critical information. Threat actors are coming up with new sophisticated attacks and techniques that are very hard to detect and prevent. Organization are conducting Red Team engagements to simulate such attacks, in order to implement countermeasures." />
+<link rel="canonical" href="http://localhost:4000/venom/" />
+<meta property="og:url" content="http://localhost:4000/venom/" />
+<meta property="og:site_name" content="J0LGER - Bloghub" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-06-02T20:47:20+03:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Venom Documentation and Usage" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2022-06-02T20:47:20+03:00","datePublished":"2022-06-02T20:47:20+03:00","description":"Introduction Nowadays enterprise systems and networks contain critical information. Threat actors are coming up with new sophisticated attacks and techniques that are very hard to detect and prevent. Organization are conducting Red Team engagements to simulate such attacks, in order to implement countermeasures.","headline":"Venom Documentation and Usage","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/venom/"},"url":"http://localhost:4000/venom/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- start custom head snippets, customize with your own _includes/head-custom.html file -->
+
+<!-- Setup Google Analytics -->
+
+
+
+<!-- You can set your favicon here -->
+<!-- link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Venom Documentation and Usage</h1>
+          <h2>Obsessed with breaking stuff | Web & InfoSec. </h2>
+        </header>
+        <section id="downloads" class="clearfix">
+          
+	
+        </section>
+        <hr>
+        <section id="main_content">
+          <h2 id="introduction">Introduction</h2>
+<p>Nowadays enterprise systems and networks contain critical information.
+Threat actors are coming up with new sophisticated attacks and techniques
+that are very hard to detect and prevent. Organization are conducting Red
+Team engagements to simulate such attacks, in order to implement
+countermeasures.</p>
+
+<p>The objective of Venom is to provide Red Team operators with an
+integrated framework. Including a Command and Control server which
+will be handling all agents compromised in a target network. The operator
+is provided with an interactive web interface that presents multiple
+features. The features include a listener creator, an implant generator, a web
+shell to control agents and a dashboard to manage different types of agents
+(Linux - Windows). The communication channel between the server and
+agents is designed to be as stealthy as possible.</p>
+
+<h2 id="run-venom">Run Venom</h2>
+<p>After Installing required packages in the Installation Guide, run Venom as by specifying a port as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 venom.py <span class="nt">--port</span> 1337
+</code></pre></div></div>
+<p>By Default, the web application will bind to localhost.</p>
+
+<p>Venom Generates it’s default account password with each runtime.</p>
+
+<p>Logging through the login portal to access the Dashboard.</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172024407-48e538a4-f668-4e4a-97d7-d2387a559418.png" alt="image" /></p>
+
+<h2 id="creating-a-new-listener">Creating a new listener</h2>
+<p>Navigate through the side toolbar to listeners, and specify the required port to spawn the HTTP listener component.</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172024416-9d9ced70-5361-43ae-94ef-d7e7eb3468c1.png" alt="image" /></p>
+
+<h2 id="generating-an-implant">Generating an implant</h2>
+<p>Navigate through the side toolbar to implants, and specify the implant type, and listener ID to bind the implant program to, once run on victim device, it will callback to the binded listener, use the <strong>Copy</strong> functionality to easily copy the program into your clipboard.</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172024436-286aa502-b368-4c40-813e-167d34857f1e.png" alt="image" /></p>
+
+<h2 id="interacting-with-agents">Interacting with agents</h2>
+<p>Navigate through the side toolbar to venom, and specify the live agent ID, by pressing on Venom you can easily use the integrated webshell to assign tasks and wait for agent results to be written back, have a good pwn time!</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172024478-ae6e9c4b-6dc2-4941-ab1a-6517664a85c4.png" alt="image" /></p>
+
+
+        </section>
+
+        <footer>
+        
+          This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.
+        </footer>
+
+      </div>
+    </div>
+  </body>
+</html>

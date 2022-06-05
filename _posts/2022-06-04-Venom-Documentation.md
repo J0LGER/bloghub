@@ -1,7 +1,8 @@
 ---
-layout: post
+layout: default
 title:  "Venom Documentation and Usage"
 date:   2022-06-02 12:47:20 -0500
+permalink: /venom/
 categories: jekyll update
 --- 
 
