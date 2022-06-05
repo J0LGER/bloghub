@@ -1,7 +1,7 @@
 ---
 layout: default
 title:  "Templated"
-permalink: /templated/
+permalink: /bloghub/templated/
 date:   2022-03-09 6:17:40 -0500
 categories: jekyll update
 ---
