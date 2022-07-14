@@ -6,6 +6,8 @@ layout: default
 
 # Web 🕸️
 
+[CSPoly](bloghub/cspoly/)
+
 [Doubl3 W4ffle](bloghub/double-waffle/)
 
 [Templ4ted](bloghub/templated/) 
