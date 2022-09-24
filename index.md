@@ -12,6 +12,7 @@ layout: default
 
 [Templ4ted](bloghub/templated/) 
 
+[Pickle Wickle](bloghub/picklewickle/)
 
 # Venom 
 
