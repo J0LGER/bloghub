@@ -1,11 +1,13 @@
 ---
 layout: default
 title:  "Pickle Wickle"
-date:   2022-09-24 11:12:00 -0500
+date:   2022-09-20 11:12:00 -0500
 categories: jekyll update
 templateEngineOverride: md
 permalink: /bloghub/picklewickle/
 ---
+
+
 ## Introduction
 In this challenge we will take advantage of Flask template filter which uses pickle library to deserialize a python object, but before, we have to analyze a simple SQL injection so we can pass our payload properly. 
 

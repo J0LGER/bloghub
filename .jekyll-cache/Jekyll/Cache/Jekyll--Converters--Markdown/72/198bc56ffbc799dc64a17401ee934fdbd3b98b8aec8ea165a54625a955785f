@@ -1,0 +1,37 @@
+I"�<h2 id="introduction">Introduction</h2>
+<p>In this application, we will take advantage of a Server-Side template injection in order to gain RCE in the flask server.</p>
+
+<h3 id="step-1">Step 1</h3>
+<p>Surfing the application we get</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172023200-340c7a1b-191e-4e23-a8aa-187391b1a440.png" alt="image" /></p>
+
+<p>Obviously, <em>Proudly powered by Flask/Jinja2</em> is an indication for SSTI vulnerability against the Jinja2 Engine.</p>
+
+<p>Fuzzing more through the application I thought of fuzzing for hidden API endpoints?, but I guess this is way too hard for an easy challenge, let’s just test it manually first.</p>
+
+<h3 id="finding-the-injection-point">Finding the injection point</h3>
+<p>Sending a request to <em>/test</em> non-existing endpoint we get</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172023219-9a050ce5-7f16-44a5-981f-f123c6e9682a.png" alt="image" /></p>
+
+<p>Page Source:</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172023229-d54bd9f4-f727-4ac2-9b49-b51a258466a5.png" alt="image" /> 
+The endpoint name is being reflected in an HTML _<str>_ tag, which is interesting.</str></p>
+
+<p>Let’s try something simple …</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172023248-1b915200-5084-4fd5-afed-d77bf72f68a4.png" alt="image" /></p>
+
+<p>Boom! template rendering applied.</p>
+
+<p>Let’s jump in to try out RCE payloads.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /
+</code></pre></div></div>
+<p>We get the flag.txt</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTB{t3mpl4t3s_4r3_m0r3_p0w3rfu1_th4n_u_th1nk!}
+</code></pre></div></div>
+<p><em>*TIP*</em>: We can use the Internal Field Separator bash variable <em>${IFS}</em> in order to inject bash spaces since endpoint path should not contain whitespaces.</p>
+:ET

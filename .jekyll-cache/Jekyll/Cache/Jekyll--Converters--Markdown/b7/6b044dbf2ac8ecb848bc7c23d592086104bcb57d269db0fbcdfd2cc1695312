@@ -1,0 +1,45 @@
+I"ù
+<h2 id="introduction">Introduction</h2>
+<p>Nowadays enterprise systems and networks contain critical information.
+Threat actors are coming up with new sophisticated attacks and techniques
+that are very hard to detect and prevent. Organization are conducting Red
+Team engagements to simulate such attacks, in order to implement
+countermeasures.</p>
+
+<p>The objective of Venom is to provide Red Team operators with an
+integrated framework. Including a Command and Control server which
+will be handling all agents compromised in a target network. The operator
+is provided with an interactive web interface that presents multiple
+features. The features include a listener creator, an implant generator, a web
+shell to control agents and a dashboard to manage different types of agents
+(Linux - Windows). The communication channel between the server and
+agents is designed to be as stealthy as possible.</p>
+
+<h2 id="run-venom">Run Venom</h2>
+<p>After Installing required packages in the Installation Guide, run Venom as by specifying a port as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 venom.py <span class="nt">--port</span> 1337
+</code></pre></div></div>
+<p>By Default, the web application will bind to localhost.</p>
+
+<p>Venom Generates itâ€™s default account password with each runtime.</p>
+
+<p>Logging through the login portal to access the Dashboard.</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172024407-48e538a4-f668-4e4a-97d7-d2387a559418.png" alt="image" /></p>
+
+<h2 id="creating-a-new-listener">Creating a new listener</h2>
+<p>Navigate through the side toolbar to listeners, and specify the required port to spawn the HTTP listener component.</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172024416-9d9ced70-5361-43ae-94ef-d7e7eb3468c1.png" alt="image" /></p>
+
+<h2 id="generating-an-implant">Generating an implant</h2>
+<p>Navigate through the side toolbar to implants, and specify the implant type, and listener ID to bind the implant program to, once run on victim device, it will callback to the binded listener, use the <strong>Copy</strong> functionality to easily copy the program into your clipboard.</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172024436-286aa502-b368-4c40-813e-167d34857f1e.png" alt="image" /></p>
+
+<h2 id="interacting-with-agents">Interacting with agents</h2>
+<p>Navigate through the side toolbar to venom, and specify the live agent ID, by pressing on Venom you can easily use the integrated webshell to assign tasks and wait for agent results to be written back, have a good pwn time!</p>
+
+<p><img src="https://user-images.githubusercontent.com/54769522/172024478-ae6e9c4b-6dc2-4941-ab1a-6517664a85c4.png" alt="image" /></p>
+
+:ET
