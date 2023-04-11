@@ -6,7 +6,7 @@ layout: default
 
 # Web 🕸️
 
-[XSS on Steroids, Gaining Unauthenticated Access](/bloghub/xss-on-steroids/)
+[XSS on Steroids, Gaining Unauthenticated Access](bloghub/xss-on-steroids/)
 
 [CSPoly](bloghub/cspoly/)
 
