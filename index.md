@@ -6,6 +6,8 @@ layout: default
 
 # Web 🕸️
 
+[XSS on Steroids, Gaining Unauthenticated Access](bloghub/xss-on-steroids/)
+
 [CSPoly](bloghub/cspoly/)
 
 [Doubl3 W4ffle](bloghub/double-waffle/)
