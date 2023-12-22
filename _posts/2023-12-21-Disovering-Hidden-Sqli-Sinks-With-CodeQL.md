@@ -102,7 +102,7 @@ The index `/` path of GET mapping reveals interesting query parameters:
 - orderBy
 - sortOrder
 
-These parameters are often called as Pagination Parameters in Development world, they also indicate a possible query execution.
+These parameters are often called Pagination Parameters in the Development world, they also indicate a possible query execution.
 
 ```java
 @GET
@@ -176,9 +176,10 @@ The function starts a StringBuilder variable that apparently builds up the selec
 
 Indeed, we can verify the SQL injection record by looking for past CVEs:
 
-![Untitled](/assets//images/cves.png)
+![cves](https://github.com/J0LGER/bloghub/assets/54769522/a796d82d-4a41-499e-9087-c63d84b9a461)
 
-We’ll NOT get into the validation class for now, however, it detects any patterns outside a whitelist regex and raises exceptions if any were matched, however, bypassing this validation is out of the scope for this article. 
+
+We’ll NOT get into the validation class for now, however, it detects any patterns outside a whitelist regex and raises exceptions if any were matched, however, bypassing this validation is out of the scope of this article. 
 
 ## **Harnessing CodeQL's Analytical Power for SQL Injection Detection**
 
@@ -191,7 +192,7 @@ Our target is to detect any SQLi paths that miss the usage of the validation cla
 The CodeQL query shall achieve the following objectives: 
 
 - Search for `RemoteFlowSources` and identify them as tainted sources.
-- Filter out *String* type RemoteFlowSources and exclude any other data types.
+- Filter out *String* type RemoteFlowSources and exclude other data types.
 - Search for DB query execution functions provided by the `JdbcTemplate` class.
 - Check if the node path is being passed as a first parameter to the previously mentioned query execution functions, if so, raise them as sinks.
 - Define the `SQLInjectionValidator` class as a sanitizer so we limit false positive flow paths.
@@ -258,11 +259,13 @@ select
 
 We obtained a considerable number of results. However, upon manual review, I discovered that they were duplicates. Therefore, we can focus on lines 20-24.
 
-![Untitled](/assets/images/codeql-1.png)
+![codeql-1](https://github.com/J0LGER/bloghub/assets/54769522/39b995a0-f4ad-46e3-b160-5186bfc0723b)
+
 
 The query parameters *orderBy* and *sortOrder* have been identified as potential SQL injection vulnerabilities. Upon checking the sink object, it was found that a query execution is performed against the *sqlBuilder* object. By tracing this object, it was determined that user input was passed without any validation and was contained within the `paginationParameters`.
 
-![Untitled](/assets/images/codeql-2.png)
+![codeql-2](https://github.com/J0LGER/bloghub/assets/54769522/c2d5b942-e56e-4966-ad5a-7d8ef68f6855)
+
 
 ## Exploitation
 
@@ -270,7 +273,8 @@ The framework gives you the flexibility to connect to different *DBMSs* of your 
 
 To see if it's vulnerable, we can try a simple sleep injection payload:
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/77329a7b-f914-49ca-8e02-1cbaf5217b12/Untitled.png)
+![image](https://github.com/J0LGER/bloghub/assets/54769522/07b7a741-24f6-455c-a990-b87dd180c69b)
+
 
 The response time reveals the execution of our injection verifying our `is_superuser` role, the vulnerability had two variants on the `/recurringdepositaccounts` and `/fixeddepositaccounts` APIs.
 
