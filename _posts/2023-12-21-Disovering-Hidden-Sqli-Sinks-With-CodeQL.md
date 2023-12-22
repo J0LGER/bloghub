@@ -1,3 +1,14 @@
+---
+layout: default
+title:  "Discovering Hidden Sqli Sinks With CodeQL"
+date:   2023-09-20 11:12:00 -0500
+categories: jekyll update
+templateEngineOverride: md
+permalink: /bloghub/Disovering-Hidden-Sqli-Sinks-With-CodeQL/
+---
+
+{% raw %} 
+
 ## Introduction
 
 I came across an interesting framework in one of my engagements where the codebase was pretty old, a microfinance framework by the Apache community called *Fineract,* described as “a framework to maintain and enhance a cloud-ready core banking system for robust, scalable, and secure operations of financial institutions.”, the versions before `≤ 1.8.4` are vulnerable to authenticated SQL injection. We will utilize CodeQL capabilities in identifying flow paths that lack validation calls, this article assumes you have basic knowledge of using CodeQL and its query development. 
@@ -272,3 +283,5 @@ The vulnerability was fixed in earlier versions of the framework.
 ## Conclusion
 
 When testing particularly large code bases, encountering a validation does not necessarily mean that the vulnerability is absent, to address this, we utilized CodeQL to identify different flow paths that do not pass through validation methods, in addition to its usage to detect all variants of the vulnerability. Although CodeQL can be used within your CI/CD for automated SAST detections, using it directly against a codebase with specific patterns and code scenarios shows the need for CodeQL and its capabilities.
+
+{% endraw %}
