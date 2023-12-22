@@ -6,6 +6,8 @@ layout: default
 
 # Web 🕸️
 
+[Discovering Hidden Sqli Sinks with CodeQL](bloghub/Disovering-Hidden-Sqli-Sinks-With-CodeQL/)
+
 [XSS on Steroids, Gaining Unauthenticated Access](bloghub/xss-on-steroids/)
 
 [CSPoly](bloghub/cspoly/)
