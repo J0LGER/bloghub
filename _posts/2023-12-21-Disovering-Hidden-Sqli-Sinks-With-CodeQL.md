@@ -276,7 +276,7 @@ The response time reveals the execution of our injection verifying our `is_super
 
 ## Remediation
 
-Such vulnerabilities arise when user input sinks to dangerous functions without proper parametrization, Despite the input validation and character escaping being a good secondary security layer, parametrization at first place helps with the defense-in-depth practice.
+Such vulnerabilities arise when user input flows to dangerous sinks and functions without proper parametrization, Despite the input validation and character escaping being a good secondary security layer, parametrization at first place helps with the defense-in-depth practice.
 
 The vulnerability was fixed in earlier versions of the framework.
 
