@@ -1,6 +1,6 @@
 ---
 layout: default
-title:  "Discovering Hidden Sqli Sinks With CodeQL"
+title:  "Discovering Hidden Sqli Sinks With CodeQL - Apache Fineract"
 date:   2023-09-20 11:12:00 -0500
 categories: jekyll update
 templateEngineOverride: md
@@ -11,7 +11,7 @@ permalink: /bloghub/Disovering-Hidden-Sqli-Sinks-With-CodeQL/
 
 ## Introduction
 
-I came across an interesting framework in one of my engagements where the codebase was pretty old, a microfinance framework by the Apache community called *Fineract,* described as “a framework to maintain and enhance a cloud-ready core banking system for robust, scalable, and secure operations of financial institutions.”, the versions before `≤ 1.8.4` are vulnerable to authenticated SQL injection. We will utilize CodeQL capabilities in identifying flow paths that lack validation calls, this article assumes you have basic knowledge of using CodeQL and its query development. 
+I encountered an interesting framework during one of my engagements. The codebase was quite old and part of a microfinance framework by Apache named Fineract. described as “a framework to maintain and enhance a cloud-ready core banking system for robust, scalable, and secure operations of financial institutions.”, the versions before `≤ 1.8.4` are vulnerable to authenticated SQL injection **CVE-2024-23538**. We will utilize CodeQL capabilities in identifying flow paths that lack validation calls, this article assumes you have basic knowledge of using CodeQL and its query development. 
 
 ## The First Sight: The Attack Surface
 
@@ -31,7 +31,7 @@ $> find . -name "*.java" | grep -v "/src/test"
 ./fineract-provider/src/main/java/org/apache/fineract/**commands**/data/ProcessingResultLookup.java
 ```
 
-Inspecting the tree view of each folder we have an insight into how the APIs and their corresponding handlers are designed  
+Inspecting the tree view of each folder we have an insight into how the APIs and their corresponding handlers are designed:  
 
 ```bash
 $> tree -L 2 ./fineract-provider/src/main/java/org/apache/fineract/commands
@@ -74,9 +74,9 @@ API mappings are defined inside the `api` directory, meanwhile, their controller
 
 ## **Delving into the Details**
 
-In modern applications, a researcher may start searching for raw query executions if present since they generally utilize Object Relation Mapping (ORMs) libraries that prevent any SQLi occurrences if used properly, unless in other cases, for example when raw queries are used. Raw queries introduce interesting attack surfaces, however, since our facing framework is considered an old project, no ORMs were in use. instead, we can detect several direct query executions with string concatenation in several classes. 
+In modern applications, a researcher may start searching for raw query executions if present since they generally utilize Object Relation Mapping (ORMs) libraries that prevent any SQLi occurrences if used properly, unless in other cases, for example when raw queries are used. Raw queries introduce interesting attack surfaces, however, since our facing framework is considered an old project, several controllers had no ORM usages. instead, we can detect several direct query executions with string concatenation in several classes. 
 
-The `/groups` mapping, for instance, with the usage of `javax` library, provides a set of annotations to define a new mapping, the `GroupsApiResource` class and its methods will define all route paths and their handlers for routes with `/gourps/*` as its prefix.
+The `/groups` mapping, for instance, with the usage of `javax` library, provides a set of annotations to define a new mapping, the `GroupsApiResource` class and its corresponding methods will define all route paths and their handlers for routes with `/gourps/*` as its prefix.
 
 ```bash
 @Path("/groups")
@@ -102,7 +102,7 @@ The index `/` path of GET mapping reveals interesting query parameters:
 - orderBy
 - sortOrder
 
-These parameters are often called Pagination Parameters in the Development world, they also indicate a possible query execution.
+These parameters are often called Pagination Parameters in the Development domain, they also indicate a possible query execution.
 
 ```java
 @GET
@@ -142,7 +142,7 @@ These parameters are often called Pagination Parameters in the Development world
     }
 ```
 
-After our targeted parameters are serialized into **PaginationParameters** object instance, they are passed to either **retrievePagedAll()** or **retrieveAll(),** depending on whether `paged` parameter was sent in the HTTP request, diving into the function body of `retrieveAll()` shows:
+After our targeted parameters are serialized into **PaginationParameters** object instance, they are passed to either **retrievePagedAll()** or **retrieveAll(),** depending on whether `paged` parameter flag is set in the HTTP request, diving into the function body of `retrieveAll()` shows the following:
 
 ```java
 @Override
@@ -172,9 +172,9 @@ After our targeted parameters are serialized into **PaginationParameters** objec
             }
 ```
 
-The function starts a StringBuilder variable that apparently builds up the select statement string, at the end of the snippet we see an *if statement* which checks the presence of the **isOrder** passed query parameter by calling its *getter* method on the previously mentioned serialized object, the parameter is eventually passed and appended to the StringBuilder object, however, we finally hit a validation function `validateSqlInjection()` that passes the final query string, this shows that the application may have an old record with SQL injection vulnerabilities, which may be resolved through this validation class.
+The function starts a _StringBuilder_ variable that apparently builds up the select statement string, at the end of the snippet we see an *if statement* which checks the presence of the **isOrder** passed query parameter by calling its *getter* method on the previously mentioned serialized object, the parameter is eventually passed and appended to the StringBuilder object, however, we finally hit a validation function `validateSqlInjection()` that passes the final query string, this shows that the application may have an old record with SQL injection vulnerabilities, which may be resolved through this validation class.
 
-Indeed, we can verify the SQL injection record by looking for past CVEs:
+Indeed, we can verify the SQL injection record by looking for publicly disclosed vulnerabilities:
 
 ![cves](https://github.com/J0LGER/bloghub/assets/54769522/a796d82d-4a41-499e-9087-c63d84b9a461)
 
@@ -191,11 +191,11 @@ Our target is to detect any SQLi paths that miss the usage of the validation cla
 
 The CodeQL query shall achieve the following objectives: 
 
-- Search for `RemoteFlowSources` and identify them as tainted sources.
-- Filter out *String* type RemoteFlowSources and exclude other data types.
-- Search for DB query execution functions provided by the `JdbcTemplate` class.
-- Check if the node path is being passed as a first parameter to the previously mentioned query execution functions, if so, raise them as sinks.
-- Define the `SQLInjectionValidator` class as a sanitizer so we limit false positive flow paths.
+- Search for `RemoteFlowSources` and identify them as tainted sources
+- Filter out `String` type of RemoteFlowSources and exclude other data types
+- Search for DB query execution functions provided by the `JdbcTemplate` java class
+- Check if the node path is being passed as a first parameter to the previously mentioned query execution functions, if so, raise them as sinks
+- Define the `SQLInjectionValidator` class as a sanitizer so we can identify flow paths missing sanitization
 
 Note that I referred back to the `springframework` documentation to check for JdbcTemplate class methods that execute queries, such as *query()*, *update()*, *batchUpdate()*, etc ...
 
@@ -257,7 +257,7 @@ select
   sink, source, "possible SQLi"
 ```
 
-We obtained a considerable number of results. However, upon manual review, I discovered that they were duplicates. Therefore, we can focus on lines 20-24.
+I obtained a considerable number of results. However, upon manual review, I discovered that they were duplicates. Therefore, we can focus on lines 20-24.
 
 ![codeql-1](https://github.com/J0LGER/bloghub/assets/54769522/39b995a0-f4ad-46e3-b160-5186bfc0723b)
 
@@ -282,7 +282,19 @@ The response time reveals the execution of our injection verifying our `is_super
 
 Such vulnerabilities arise when user input flows to dangerous sinks and functions without proper parametrization, Despite the input validation and character escaping being a good secondary security layer, parametrization at first place helps with the defense-in-depth practice.
 
-The vulnerability was fixed in earlier versions of the framework.
+This vulnerability was assigned _CVE-2024-23538_ and you can find the advisory here:
+https://nvd.nist.gov/vuln/detail/CVE-2024-23538 
+
+| Event                     | Date               |
+|---------------------------|--------------------|
+| Reported to security team | 9 Aug 2023         |
+| Fixed                     | 6 Dec 2023         |
+| Update Released           | 12 Jan 2024        |
+| Issue public              | 15 March 2024      |
+| Affects                   | 1.8.4 and earlier releases |
+
+
+
 
 ## Conclusion
 
