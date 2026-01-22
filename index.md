@@ -19,7 +19,7 @@ layout: default
 [Pickle Wickle](bloghub/picklewickle/)
 
 # Android Security
-[Uncovering Million Dollars Worth Vulnerability](bloghub/Uncovering-Million-Dollars-Worth-Vulnerability)
+[Uncovering Million Dollars Worth Vulnerability](bloghub/Uncovering-Million-Dollars-Worth-Vulnerability/)
 
 # Venom 
 
