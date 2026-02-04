@@ -36,7 +36,7 @@ By hosting an launcher.html with the following content, which can be an appealin
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Visit us at: skidz.io</title>
+  <title>Hey</title>
 </head>
 <body>
   <script>
